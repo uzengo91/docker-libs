@@ -1,0 +1,9 @@
+services:
+  grafana:
+    image: grafana/grafana:main-ubuntu
+    container_name: grafana
+    restart: always
+    ports:
+      - 23000:3000
+    volumes:
+      - ./data:/var/lib/grafana
