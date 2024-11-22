@@ -7,9 +7,11 @@ services:
       - ./entrypoint.sh:/app/entrypoint.sh
 
     environment:
-      JAVA_TOOL_OPTIONS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=7091 -Dcom.sun.management.jmxremote.rmi.port=7091 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false  -Djava.rmi.server.hostname=127.0.0.1 -Xmx512m -Xms512m -Djava.security.egd=file:/dev/./urandom"
-    # entrypoint: ["/app/entrypoint.sh"]
-    entrypoint: ["java", "-jar", "/app/app.jar"]
+      #JAVA_TOOL_OPTIONS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=7091 -Dcom.sun.management.jmxremote.rmi.port=7091 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false  -Djava.rmi.server.hostname=127.0.0.1 -Xmx512m -Xms512m -Djava.security.egd=file:/dev/./urandom"
+      JAVA_OPTS: "-Xmx512m -Xms512m -Djava.security.egd=file:/dev/./urandom"
+
+    command: ["/app/entrypoint.sh"]
+    # command: ["/bin/sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]
     ports:
       - "8080:8080"
       - "7091:7091"

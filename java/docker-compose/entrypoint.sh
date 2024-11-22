@@ -1,2 +1,2 @@
 #!/bin/sh
-java $JAVA_OPT -jar /app/app.jar
+java $JAVA_OPTS -Da=33 -jar /app/app.jar
