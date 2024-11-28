@@ -12,4 +12,4 @@ ARG ffmpeg_version=ffmpeg-n5.1-latest-linux64-gpl-5.1
 ARG ffmpeg_version_file=${ffmpeg_version}.tar.xz
 
 
-RUN apt update && apt install -y curl wget net-tools xz-utils iputils-ping jq && apt clean
+RUN apt update && apt install -y procps curl wget net-tools xz-utils iputils-ping jq && apt clean
