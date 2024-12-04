@@ -1,0 +1,14 @@
+services:
+  grafana:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - 15672:15672
+      - 5672:5672
+    environment:
+      - RABBITMQ_DEFAULT_USER=demo
+      - RABBITMQ_DEFAULT_PASS=demodemo
+      - RABBITMQ_DEFAULT_VHOST=demo
+    volumes:
+      - ./data:/var/lib/rabbitmq
