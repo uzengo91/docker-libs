@@ -89,8 +89,9 @@ jobs:
             continue
           fi
           echo "folderPath: $filePath, imageName: $image"
-          pushTag="dockerFiles__${LENGTH}__pushTag"
-          tag=$(eval "echo \${$pushName}")
+          tagName="dockerFiles__${LENGTH}__pushTag"
+          tag=$(eval "echo \${$tagName}")
+          pushTag=""
           
           # 不存在tag 或者tag为空
           if [ -z "$tag" ]; then
