@@ -1,0 +1,23 @@
+images:
+  - image: nginx:latest
+    platform: linux/amd64
+    enabled: false
+    pushName: gcr.io/$PROJECT_ID/$REPO_NAME
+  - image: eclipse-temurin:8u432-b06-jdk-focal
+    platform: linux/amd64
+    enabled: false
+    pushName: eclipse-temurin:8u432-b06-jdk-focal2
+  - image: tomcat:9.0.91-jdk8-temurin-focal
+    platform: linux/amd64
+    enabled: false
+    pushName: tomcat:9.0.91-jdk8-temurin-focal
+
+dockerFiles:
+  - folderPath: java/jdk8
+    imageName: jdk8-8u432-focal
+    enabled: true
+    pushTag: "" #空字符串表示 使用 $imageName:$date-$rand[4] 作为tag
+  - folderPath: java/jdk8-ffmpeg
+    imageName: jdk8-8u432-focal-ffmpeg
+    enabled: true
+    pushTag: "" #空字符串表示 使用 $imageName:$date-$rand[4] 作为tag

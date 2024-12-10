@@ -1,0 +1,259 @@
+name: Docker
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+
+env:
+  ALIYUN_REGISTRY: "${{ secrets.ALIYUN_REGISTRY }}"
+  ALIYUN_NAME_SPACE: "${{ secrets.ALIYUN_NAME_SPACE }}"
+  ALIYUN_REGISTRY_USER: "${{ secrets.ALIYUN_REGISTRY_USER }}"
+  ALIYUN_REGISTRY_PASSWORD: "${{ secrets.ALIYUN_REGISTRY_PASSWORD }}"
+  ALIYUN_REGISTRY_BASE_PATH: "${{ secrets.ALIYUN_REGISTRY_BASE_PATH }}"
+
+jobs:
+
+  build:
+    name: Pull
+    runs-on: ubuntu-latest
+    steps:
+    - name: Before freeing up disk space
+      run: |
+        echo "Before freeing up disk space"
+        echo "=============================================================================="
+        df -hT
+        echo "=============================================================================="
+
+    # 增加可用磁盘空间
+    - name: Maximize build space
+      uses: easimon/maximize-build-space@master
+      with:
+
+        root-reserve-mb: 2048
+        swap-size-mb: 128
+        remove-dotnet: 'true'
+        remove-haskell: 'true'
+        # 如果空间还是不够用，可以把以下开启，清理出更多空间
+        # remove-android: 'true'
+        # remove-codeql: 'true'
+        build-mount-path: '/var/lib/docker/'
+
+    - name: Restart docker
+      run: sudo service docker restart
+
+    - name: Free up disk space complete
+      run: |
+        echo "Free up disk space complete"
+        echo "=============================================================================="
+        df -hT
+        echo "=============================================================================="
+
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Docker Setup Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Multi YAML Read
+      uses: actions-tools/yaml-outputs@v2
+      id: yaml
+      with:
+        file-path: ${{ github.workspace }}/build.yaml
+        export-env-variables: 'true'
+
+    - name: dockerfile build and push
+      id: dockerfile-build-push
+      run: |
+        echo "dockerfile-build-push start"
+        echo "==================================================="
+        docker login -u $ALIYUN_REGISTRY_USER -p $ALIYUN_REGISTRY_PASSWORD $ALIYUN_REGISTRY
+        LENGTH=0
+        while true
+        do
+          path="dockerFiles__${LENGTH}__folderPath"
+          if [ -z "$(eval "echo \${$path}")" ]; then
+            break
+          fi
+          filePath=$(eval "echo \${$path}")
+          imageName="dockerFiles__${LENGTH}__imageName"
+          if [ -z "$(eval "echo \${$imageName}")" ]; then
+            break
+          fi
+          image=$(eval "echo \${$imageName}")
+          enable="dockerFiles__${LENGTH}__enabled"
+          if [ "$(eval "echo \${$enable}")" == "false" ]; then
+            echo "folderPath $image dockerfile is disabled"
+            LENGTH=$((LENGTH+1))
+            continue
+          fi
+          echo "folderPath: $filePath, imageName: $image"
+          pushTag="dockerFiles__${LENGTH}__pushTag"
+          tag=$(eval "echo \${$pushName}")
+          
+          # 不存在tag 或者tag为空
+          if [ -z "$tag" ]; then
+            pushTag=$(date "+%Y%m%d%H%M%S")
+            #4位随机数
+            rand=$(cat /proc/sys/kernel/random/uuid | cut -b 1-4)
+            pushTag=$image:$pushTag-$rand
+          else
+            pushTag=$image:$tag
+          fi
+          echo "pushName: $pushTag"
+          # 进到目录 docker build -t $line .
+          cd $filePath && docker build -t $image .
+
+          new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/$ALIYUN_REGISTRY_BASE_PATH/$pushTag"
+          echo "docker tag $image $new_image"
+          docker tag $image $new_image
+          echo "docker push $new_image"
+          docker push $new_image
+          echo "开始清理磁盘空间"
+          echo "=============================================================================="
+          df -hT
+          echo "=============================================================================="
+          docker rmi $image
+          docker rmi $new_image
+          echo "磁盘空间清理完毕"
+          echo "=============================================================================="
+          df -hT
+          echo "=============================================================================="
+        
+          LENGTH=$((LENGTH+1))
+        done
+        
+        echo "image-build-push end"
+        echo "==================================================="
+
+    - name: images build and push
+      id: image-build-push
+      run: |
+        echo "image-build-push start"
+        echo "==================================================="
+        docker login -u $ALIYUN_REGISTRY_USER -p $ALIYUN_REGISTRY_PASSWORD $ALIYUN_REGISTRY
+        LENGTH=0
+        while true
+        do
+          name="images__${LENGTH}__image"
+          if [ -z "$(eval "echo \${$name}")" ]; then
+              break
+          fi
+          image=$(eval "echo \${$name}")
+          enable="images__${LENGTH}__enabled"
+          if [ "$(eval "echo \${$enable}")" == "false" ]; then
+              echo "image $image is disabled"
+              LENGTH=$((LENGTH+1))
+              continue
+          fi
+          echo "image: $image"
+          platformName="images__${LENGTH}__platform"
+          platform=$(eval "echo \${$platformName}")
+          echo "platform: $platform"
+          pushName="images__${LENGTH}__pushName"
+          pushTag=$(eval "echo \${$pushName}")
+          echo "pushName: $pushTag"
+          #            echo "docker pull $line"
+          docker pull $image
+
+          new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/$ALIYUN_REGISTRY_BASE_PATH/$pushTag"
+          echo "docker tag $image $new_image"
+          docker tag $image $new_image
+          echo "docker push $new_image"
+          docker push $new_image
+          echo "开始清理磁盘空间"
+          echo "=============================================================================="
+          df -hT
+          echo "=============================================================================="
+          docker rmi $image
+          docker rmi $new_image
+          echo "磁盘空间清理完毕"
+          echo "=============================================================================="
+          df -hT
+          echo "=============================================================================="
+        
+          LENGTH=$((LENGTH+1))
+        done
+        
+        echo "image-build-push end"
+        echo "==================================================="
+
+#    - name: Build and push image Aliyun
+#      run: |
+#        docker login -u $ALIYUN_REGISTRY_USER -p $ALIYUN_REGISTRY_PASSWORD $ALIYUN_REGISTRY
+#        # 数据预处理,判断镜像是否重名
+#        declare -A duplicate_images
+#        declare -A temp_map
+#
+#
+#        while IFS= read -r line || [ -n "$line" ]; do
+#            # 忽略空行与注释
+#            [[ -z "$line" ]] && continue
+#            if echo "$line" | grep -q '^\s*#'; then
+#                continue
+#            fi
+#
+#            echo "docker pull $line"
+#            docker pull $line
+#
+#            image=$(echo "$line" | awk '{print $NF}')
+#            echo "image: $image"
+#
+#            new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/$ALIYUN_REGISTRY_BASE_PATH/$image"
+#            echo "docker tag $image $new_image"
+#            docker tag $image $new_image
+#            echo "docker push $new_image"
+#            docker push $new_image
+#            echo "开始清理磁盘空间"
+#            echo "=============================================================================="
+#            df -hT
+#            echo "=============================================================================="
+#            docker rmi $image
+#            docker rmi $new_image
+#            echo "磁盘空间清理完毕"
+#            echo "=============================================================================="
+#            df -hT
+#            echo "=============================================================================="
+#
+#        done < images.txt
+#
+#    - name: Build docker file push image Aliyun
+#      run: |
+#        docker login -u $ALIYUN_REGISTRY_USER -p $ALIYUN_REGISTRY_PASSWORD $ALIYUN_REGISTRY
+#        tag=$(date "+%Y%m%d%H%M%S")
+#        #4位随机数
+#        rand=$(cat /proc/sys/kernel/random/uuid | cut -b 1-4)
+#        tag=$tag-$rand
+#
+#        while IFS= read -r line || [ -n "$line" ]; do
+#            # 忽略空行与注释
+#            [[ -z "$line" ]] && continue
+#            if echo "$line" | grep -q '^\s*#'; then
+#                continue
+#            fi
+#
+#            echo "docker pull $line"
+#            # 进到目录 docker build -t $line .
+#            image=$(echo "$line" | awk '{print $NF}'):$tag
+#            cd dockerfile/$line && docker build -t $image .
+#
+#            echo "image: $image"
+#
+#            new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/$ALIYUN_REGISTRY_BASE_PATH/$image"
+#            echo "docker tag $image $new_image"
+#            docker tag $image $new_image
+#            echo "docker push $new_image"
+#            docker push $new_image
+#            echo "开始清理磁盘空间"
+#            echo "=============================================================================="
+#            df -hT
+#            echo "=============================================================================="
+#            docker rmi $image
+#            docker rmi $new_image
+#            echo "磁盘空间清理完毕"
+#            echo "=============================================================================="
+#            df -hT
+#            echo "=============================================================================="
+#
+#        done < dockerfile.txt
