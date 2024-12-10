@@ -65,6 +65,34 @@ jobs:
         file-path: ${{ github.workspace }}/build.yaml
         export-env-variables: 'true'
 
+    - name:  runtime base dockerfile
+      id: runtime-base-dockerfile
+      run: |
+        echo "runtime-base-dockerfile start"
+        echo "==================================================="
+        LENGTH=0
+        while true
+        do
+          path="runtimes__${LENGTH}__folderPath"
+          if [ -z "$(eval "echo \${$path}")" ]; then
+            break
+          fi
+          filePath=$(eval "echo \${$path}")
+          imageName="runtimes__${LENGTH}__imageName"
+          if [ -z "$(eval "echo \${$imageName}")" ]; then
+            break
+          fi
+          image=$(eval "echo \${$imageName}")
+
+          echo "folderPath: $filePath, imageName: $image"
+
+          docker build -t $image $filePath
+          LENGTH=$((LENGTH+1))
+        done
+        
+        echo "runtime-base-dockerfile end"
+        echo "==================================================="
+
     - name: dockerfile build and push
       id: dockerfile-build-push
       run: |

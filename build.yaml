@@ -12,6 +12,10 @@ images:
     enabled: false
     pushName: tomcat:9.0.91-jdk8-temurin-focal
 
+runtimes:
+  - folderPath: java/base
+    imageName: dockerlibs-base
+
 dockerFiles:
   - folderPath: java/jdk8
     imageName: jdk8-8u432-focal
@@ -19,5 +23,5 @@ dockerFiles:
     pushTag: "" #空字符串表示 使用 $imageName:$date-$rand[4] 作为tag
   - folderPath: java/jdk8-ffmpeg
     imageName: jdk8-8u432-focal-ffmpeg
-    enabled: false
+    enabled: true
     pushTag: "" #空字符串表示 使用 $imageName:$date-$rand[4] 作为tag
