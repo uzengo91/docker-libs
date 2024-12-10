@@ -15,9 +15,9 @@ images:
 dockerFiles:
   - folderPath: java/jdk8
     imageName: jdk8-8u432-focal
-    enabled: true
+    enabled: false
     pushTag: "" #空字符串表示 使用 $imageName:$date-$rand[4] 作为tag
   - folderPath: java/jdk8-ffmpeg
     imageName: jdk8-8u432-focal-ffmpeg
-    enabled: true
+    enabled: false
     pushTag: "" #空字符串表示 使用 $imageName:$date-$rand[4] 作为tag
