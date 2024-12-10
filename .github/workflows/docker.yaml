@@ -104,7 +104,7 @@ jobs:
           fi
           echo "pushName: $pushTag"
           # 进到目录 docker build -t $line .
-          cd $filePath && docker build -t $image .
+          docker build -t $image $filePath
 
           new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/$ALIYUN_REGISTRY_BASE_PATH/$pushTag"
           echo "docker tag $image $new_image"
