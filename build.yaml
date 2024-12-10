@@ -28,4 +28,4 @@ dockerFiles:
   - folderPath: java/jdk8-arthas-server
     imageName: jdk8-arthas-server
     enabled: true
-    pushTag: "v0.0.1"
+    pushTag: "v0.0.2"
