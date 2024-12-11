@@ -65,8 +65,8 @@ jobs:
         file-path: ${{ github.workspace }}/build.yaml
         export-env-variables: 'true'
 
-    - name:  runtime base dockerfile
-      id: runtime-base-dockerfile
+    - name:  runtime base dockerfile libs
+      id: runtime-base-dockerfile-libs
       run: |
         echo "runtime-base-dockerfile start"
         echo "==================================================="
@@ -90,7 +90,7 @@ jobs:
           LENGTH=$((LENGTH+1))
         done
         
-        echo "runtime-base-dockerfile end"
+        echo "runtime-base-dockerfile-libs end"
         echo "==================================================="
 
     - name: dockerfile build and push
