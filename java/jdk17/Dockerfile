@@ -11,4 +11,5 @@ RUN cat /etc/os-release && cat /etc/apt/sources.list && cp /etc/apt/sources.list
 # sources.list-20.04-focal 加速国内apt源
 COPY --from=runtime /opt/sources/ubuntu/sources.list-20.04-focal /etc/apt/sources.list
 
-RUN apt update && apt install -y procps curl wget net-tools xz-utils iputils-ping jq && apt clean
+RUN apt update && apt install -y procps curl wget net-tools xz-utils iputils-ping jq && apt clean && \
+apt autoremove && apt autoclean && rm -rf /var/lib/apt/lists/*
