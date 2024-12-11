@@ -19,8 +19,8 @@ ARG ffmpeg_version_file=${ffmpeg_version}.tar.xz
 
 
 RUN apt update && apt install -y curl wget procps net-tools xz-utils iputils-ping jq && && apt clean && \
-apt autoremove && apt autoclean && rm -rf /var/lib/apt/lists/* \
-&& curl -O -L "https://autotrainplatform-online.oss-cn-beijing.aliyuncs.com/local/ffmpeg/${ffmpeg_version_file}" \
+apt autoremove && apt autoclean && rm -rf /var/lib/apt/lists/*
+RUN curl -O -L "https://autotrainplatform-online.oss-cn-beijing.aliyuncs.com/local/ffmpeg/${ffmpeg_version_file}" \
 && tar -xvf ${ffmpeg_version_file} && cp ${ffmpeg_version}/bin/ffmpeg ${ffmpeg_version}/bin/ffprobe  /usr/local/bin/ \
 && rm -rf ${ffmpeg_version_file} ${ffmpeg_version} && ffmpeg -version
 
