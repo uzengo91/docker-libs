@@ -1,4 +1,4 @@
-FROM dockerlibs-base as runtime
+FROM zengo1209/dockerlibs-sources as runtime
 
 FROM adoptopenjdk/openjdk8:x86_64-debianslim-jdk8u432-b06
 

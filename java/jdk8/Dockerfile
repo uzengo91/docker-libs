@@ -1,4 +1,4 @@
-FROM dockerlibs-base as runtime
+FROM zengo1209/dockerlibs-sources as runtime
 
 
 
