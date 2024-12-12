@@ -19,7 +19,7 @@ jobs:
 
   build:
     name: Pull
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Before freeing up disk space
       run: |
