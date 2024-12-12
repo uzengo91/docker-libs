@@ -3,6 +3,7 @@ FROM zengo1209/dockerlibs-sources as runtime
 FROM adoptopenjdk/openjdk11:x86_64-debianslim-jdk-11.0.25_9
 
 LABEL author="uzengo91"
+LABEL name="jdk11"
 
 WORKDIR /opt
 

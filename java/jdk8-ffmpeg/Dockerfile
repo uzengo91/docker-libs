@@ -10,6 +10,8 @@ RUN cat /etc/os-release && cat /etc/apt/sources.list && cp /etc/apt/sources.list
 && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
 
 # sources.list-10-buster 加速国内apt源
+
+
 COPY --from=runtime /opt/sources/debian/sources.list-10-buster /etc/apt/sources.list
 
 
@@ -23,4 +25,3 @@ RUN apt update && apt install -y curl wget procps net-tools xz-utils iputils-pin
 && curl -O -L "https://autotrainplatform-online.oss-cn-beijing.aliyuncs.com/local/ffmpeg/${ffmpeg_version_file}" \
 && tar -xvf ${ffmpeg_version_file} && cp ${ffmpeg_version}/bin/ffmpeg ${ffmpeg_version}/bin/ffprobe  /usr/local/bin/ \
 && rm -rf ${ffmpeg_version_file} ${ffmpeg_version} && ffmpeg -version
-

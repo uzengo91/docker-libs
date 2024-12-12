@@ -15,17 +15,28 @@ images:
 runtimes:
   - folderPath: base/libs-sources
     imageName: zengo1209/dockerlibs-sources
+    enabled: true
+  - folderPath: base/libs-ffmpeg5
+    imageName: zengo1209/dockerlibs-ffmpeg5
+    enabled: true
+  - folderPath: base/libs-ffmpeg6
+    imageName: zengo1209/dockerlibs-ffmpeg6
+    enabled: false
 
 dockerFiles:
   - folderPath: java/jdk8
-    imageName: jdk8-8u432
+    imageName: jdk8-debian
     enabled: true
     pushTag: "" #空字符串表示 使用 $imageName:$date-$rand[4] 作为tag
   - folderPath: java/jdk8-ffmpeg
-    imageName: jdk8-8u432-ffmpeg
+    imageName: jdk8-debian-ffmpeg
     enabled: true
     pushTag: "" #空字符串表示 使用 $imageName:$date-$rand[4] 作为tag
+  - folderPath: java/jdk8-ffmpeg-copy
+    imageName: jdk8-debian-ffmpeg-copy
+    enabled: true
+    pushTag: ""
   - folderPath: java/jdk8-arthas-server
-    imageName: jdk8-arthas-server
+    imageName: jdk8-debian-arthas-server
     enabled: false
     pushTag: "v0.0.4"
