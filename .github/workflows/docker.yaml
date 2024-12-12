@@ -7,7 +7,6 @@ on:
     paths:
       - 'build.yaml'
 
-
 env:
   ALIYUN_REGISTRY: "${{ secrets.ALIYUN_REGISTRY }}"
   ALIYUN_NAME_SPACE: "${{ secrets.ALIYUN_NAME_SPACE }}"
@@ -66,10 +65,10 @@ jobs:
         file-path: ${{ github.workspace }}/build.yaml
         export-env-variables: 'true'
 
-    - name:  runtime base dockerfile libs
+    - name: Runtime Base Dockerfile Libs
       id: runtime-base-dockerfile-libs
       run: |
-        echo "runtime-base-dockerfile start"
+        echo "runtime-base-dockerfile-libs start"
         echo "==================================================="
         LENGTH=0
         while true
@@ -100,7 +99,7 @@ jobs:
         echo "runtime-base-dockerfile-libs end"
         echo "==================================================="
 
-    - name: dockerfile build and push
+    - name: Dockerfile Build And Push
       id: dockerfile-build-push
       run: |
         echo "dockerfile-build-push start"
@@ -165,7 +164,7 @@ jobs:
         echo "image-build-push end"
         echo "==================================================="
 
-    - name: images build and push
+    - name: Image Build And Push
       id: image-build-push
       run: |
         echo "image-build-push start"

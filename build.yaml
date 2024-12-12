@@ -26,15 +26,15 @@ runtimes:
 dockerFiles:
   - folderPath: java/jdk8
     imageName: jdk8-debian
-    enabled: true
-    pushTag: "" #空字符串表示 使用 $imageName:$date-$rand[4] 作为tag
+    enabled: false
+    pushTag: "" # 空字符串表示 使用 $imageName:$date-$rand[4] 作为tag
   - folderPath: java/jdk8-ffmpeg
     imageName: jdk8-debian-ffmpeg
-    enabled: true
-    pushTag: "" #空字符串表示 使用 $imageName:$date-$rand[4] 作为tag
+    enabled: false
+    pushTag: "" # 空字符串表示 使用 $imageName:$date-$rand[4] 作为tag
   - folderPath: java/jdk8-ffmpeg-copy
     imageName: jdk8-debian-ffmpeg-copy
-    enabled: true
+    enabled: false
     pushTag: ""
   - folderPath: java/jdk8-arthas-server
     imageName: jdk8-debian-arthas-server
