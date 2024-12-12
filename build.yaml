@@ -22,6 +22,9 @@ runtimes:
   - folderPath: base/libs-ffmpeg6
     imageName: zengo1209/dockerlibs-ffmpeg6
     enabled: false
+  - folderPath: base/libs-java-agent
+    imageName: zengo1209/dockerlibs-java-agent
+    enabled: false
 
 dockerFiles:
   - folderPath: java/jdk8
