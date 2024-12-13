@@ -1,0 +1,134 @@
+services:
+  redis-6381:
+    image: redis:6.2
+    container_name: redis-6381
+    ports:
+      - 6381:6381
+      - 16381:16381
+    volumes:
+      - ./data/redis_6381/conf/redis.conf:/etc/redis.conf
+      - ./data/redis_6381/data:/data
+    command: ["redis-server", "/etc/redis.conf"]
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+      redis-cluster:
+        aliases:
+          - redis-6381
+        ipv4_address: 172.19.0.101
+          
+  redis-6382:
+    image: redis:6.2
+    container_name: redis-6382
+    ports:
+      - 6382:6382
+      - 16382:16382
+    volumes:
+      - ./data/redis_6382/conf/redis.conf:/etc/redis.conf
+      - ./data/redis_6382/data:/data
+    command: ["redis-server", "/etc/redis.conf"]
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+      redis-cluster:
+        aliases:
+          - redis-6382
+        ipv4_address: 172.19.0.102
+          
+  redis-6383:
+    image: redis:6.2
+    container_name: redis-6383
+    ports:
+      - 6383:6383
+      - 16383:16383
+    volumes:
+      - ./data/redis_6383/conf/redis.conf:/etc/redis.conf
+      - ./data/redis_6383/data:/data
+    command: ["redis-server", "/etc/redis.conf"]
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+      redis-cluster:
+        aliases:
+          - redis-6383
+        ipv4_address: 172.19.0.103
+          
+  redis-6384:
+    image: redis:6.2
+    container_name: redis-6384
+    ports:
+      - 6384:6384
+      - 16384:16384
+    volumes:
+      - ./data/redis_6384/conf/redis.conf:/etc/redis.conf
+      - ./data/redis_6384/data:/data
+    command: ["redis-server", "/etc/redis.conf"]
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+      redis-cluster:
+        aliases:
+          - redis-6384
+        ipv4_address: 172.19.0.104
+          
+  redis-6385:
+    image: redis:6.2
+    container_name: redis-6385
+    ports:
+      - 6385:6385
+      - 16385:16385
+    volumes:
+      - ./data/redis_6385/conf/redis.conf:/etc/redis.conf
+      - ./data/redis_6385/data:/data
+    command: ["redis-server", "/etc/redis.conf"]
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+      redis-cluster:
+        aliases:
+          - redis-6385
+        ipv4_address: 172.19.0.105
+          
+  redis-6386:
+    image: redis:6.2
+    container_name: redis-6386
+    ports:
+      - 6386:6386
+      - 16386:16386
+    volumes:
+      - ./data/redis_6386/conf/redis.conf:/etc/redis.conf
+      - ./data/redis_6386/data:/data
+    command: ["redis-server", "/etc/redis.conf"]
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+      redis-cluster:
+        aliases:
+          - redis-6386
+        ipv4_address: 172.19.0.106
+  redis-init:
+    image: redis:6.2
+    container_name: redis-init
+    depends_on:
+      - redis-6381
+      - redis-6382
+      - redis-6383
+      - redis-6384
+      - redis-6385
+      - redis-6386
+    entrypoint: >
+      sh -c "sleep 5 && redis-cli --cluster-yes --cluster create 172.19.0.101:6381 172.19.0.102:6382 172.19.0.103:6383 172.19.0.104:6384 172.19.0.105:6385 172.19.0.106:6386 --cluster-replicas 1"
+    networks:
+      redis-cluster:
+        aliases:
+          - redis-6386
+        ipv4_address: 172.19.0.107
+
+networks:
+  redis-cluster:
+    name: redis-cluster
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.19.0.0/16
+          gateway: 172.19.0.1

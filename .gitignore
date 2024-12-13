@@ -1,5 +1,6 @@
 tools/grafana/data
 tools/rabbitmq/data
+tools/redis-cluster/data
 .idea
 .vscode
 **/*.jar

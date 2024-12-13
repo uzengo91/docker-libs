@@ -1,0 +1,83 @@
+services:
+  redis-node1:
+    image: redis:7.4
+    container_name: redis-node1
+    command: ["redis-server", "/redis.conf","--port","16379"]
+    ports:
+      - "16379:16379"
+    volumes:
+      - ./data/redis-node1:/data
+      - ./data/redis-config/redis.conf:/redis.conf
+    network_mode: "host"
+
+  redis-node2:
+    image: redis:7.4
+    container_name: redis-node2
+    command: ["redis-server", "/redis.conf","--port","16380"]
+    ports:
+      - "16380:16380"
+    volumes:
+      - ./data/redis-node2:/data
+      - ./data/redis-config/redis.conf:/redis.conf
+    network_mode: "host"
+
+  redis-node3:
+    image: redis:7.4
+    container_name: redis-node3
+    command: ["redis-server", "/redis.conf","--port","16381"]
+    ports:
+      - "16381:16381"
+    volumes:
+      - ./data/redis-node3:/data
+      - ./data/redis-config/redis.conf:/redis.conf
+    network_mode: "host"
+
+  redis-node4:
+    image: redis:7.4
+    container_name: redis-node4
+    command: ["redis-server", "/redis.conf","--port","16382"]
+    ports:
+      - "16382:16382"
+    volumes:
+      - ./data/redis-node4:/data
+      - ./data/redis-config/redis.conf:/redis.conf
+    network_mode: "host"
+
+  redis-node5:
+    image: redis:7.4
+    container_name: redis-node5
+    command: ["redis-server", "/redis.conf","--port","16383"]
+    ports:
+      - "16383:16383"
+    volumes:
+      - ./data/redis-node5:/data
+      - ./data/redis-config/redis.conf:/redis.conf
+    network_mode: "host"
+
+  redis-node6:
+    image: redis:7.4
+    container_name: redis-node6
+    command: ["redis-server", "/redis.conf","--port","16384"]
+    ports:
+      - "16384:16384"
+    volumes:
+      - ./data/redis-node6:/data
+      - ./data/redis-config/redis.conf:/redis.conf
+    network_mode: "host"
+
+  # redis-init:
+  #   image: redis:7.4
+  #   container_name: redis-init
+  #   depends_on:
+  #     - redis-node1
+  #     - redis-node2
+  #     - redis-node3
+  #     - redis-node4
+  #     - redis-node5
+  #     - redis-node6
+  #   entrypoint: >
+  #     sh -c "sleep 10 && echo yes | redis-cli --cluster create  172.21.0.2:6379 172.21.0.3:6379 172.21.0.4:6379 172.21.0.5:6379 172.21.0.6:6379 172.21.0.7:6379 --cluster-replicas 1"
+  #   networks:
+  #     redis-net:
+  #       ipv4_address: 172.21.0.8
+
