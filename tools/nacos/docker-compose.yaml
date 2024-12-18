@@ -1,0 +1,8 @@
+services:
+  nacos:
+    image: nacos/nacos-server:2.0.2
+    container_name: nacos
+    restart: always
+    hostname: "nacos-local"
+    ports:
+      - 8848:8848

@@ -8,8 +8,11 @@ services:
       - 15672:15672
       - 5672:5672
     environment:
-      - RABBITMQ_DEFAULT_USER=demo
-      - RABBITMQ_DEFAULT_PASS=demodemo
-      - RABBITMQ_DEFAULT_VHOST=demo
+      - RABBITMQ_DEFAULT_USER=superadmin
+      - RABBITMQ_DEFAULT_PASS=ECr7ZcUl64cmfJtLqqpj
+      - RABBITMQ_DEFAULT_VHOST=digitaltwin-prod
     volumes:
       - ./data:/var/lib/rabbitmq
+      - ./plugins/rabbitmq_delayed_message_exchange-4.0.2.ez:/plugins/rabbitmq_delayed_message_exchange-4.0.2.ez
+
+# 进入到容器中 rabbitmq-plugins enable rabbitmq_delayed_message_exchange 启用插件
