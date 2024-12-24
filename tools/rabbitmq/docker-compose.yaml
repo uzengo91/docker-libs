@@ -12,11 +12,12 @@ services:
       - RABBITMQ_DEFAULT_PASS=ECr7ZcUl64cmfJtLqqpj
       - RABBITMQ_DEFAULT_VHOST=digitaltwin-prod
     command: >
-      /bin/bash -c "
-      rabbitmq-plugins enable rabbitmq_delayed_message_exchange --offline &&
-      rabbitmq-server"
+      /bin/bash -c "cp /opt/plugins/* /plugins/ && rabbitmq-plugins enable rabbitmq_delayed_message_exchange --offline && rabbitmq-server"
     volumes:
       - ./data:/var/lib/rabbitmq
-      - ./plugins/rabbitmq_delayed_message_exchange-4.0.2.ez:/plugins/rabbitmq_delayed_message_exchange-4.0.2.ez
+      - ./plugins:/opt/plugins
 
 # 进入到容器中 rabbitmq-plugins enable rabbitmq_delayed_message_exchange 启用插件
+# /bin/bash -c "
+# rabbitmq-plugins enable rabbitmq_delayed_message_exchange --offline &&
+# rabbitmq-server"
