@@ -16,6 +16,9 @@ runtimes:
   - folderPath: base/libs-sources
     imageName: zengo1209/dockerlibs-sources
     enabled: true
+  - folderPath: base/libs-jemalloc
+    imageName: zengo1209/dockerlibs-jemalloc
+    enabled: true
   - folderPath: base/libs-ffmpeg5
     imageName: zengo1209/dockerlibs-ffmpeg5
     enabled: false
@@ -45,5 +48,9 @@ dockerFiles:
     pushTag: "v0.0.4"
   - folderPath: java/jdk21
     imageName: jdk21-ubuntu-22.04
+    enabled: false
+    pushTag: ""
+  - folderPath: java/jdk21-jemalloc
+    imageName: jdk21-jemalloc-ubuntu-22.04
     enabled: true
     pushTag: ""
