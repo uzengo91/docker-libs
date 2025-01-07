@@ -53,4 +53,4 @@ dockerFiles:
   - folderPath: java/jdk21-jemalloc
     imageName: jdk21-jemalloc-ubuntu-22.04
     enabled: true
-    pushTag: ""
+    pushTag: ''
