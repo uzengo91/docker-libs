@@ -11,6 +11,10 @@ images:
     platform: linux/amd64
     enabled: false
     pushName: tomcat:9.0.91-jdk8-temurin-focal
+  - image: alpine/socat:latest
+    platform: linux/amd64
+    enabled: true
+    pushName: alpine/socat:v1.0.0
 
 runtimes:
   - folderPath: base/libs-sources
