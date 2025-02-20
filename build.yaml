@@ -13,8 +13,12 @@ images:
     pushName: tomcat:9.0.91-jdk8-temurin-focal
   - image: alpine/socat:latest
     platform: linux/amd64
-    enabled: true
+    enabled: false
     pushName: alpine/socat:v1.0.0
+  - image: langgenius/dify-sandbox:0.2.10
+    platform: linux/amd64
+    enabled: true
+    pushName: dify-sandbox:0.2.10
 
 runtimes:
   - folderPath: base/libs-sources
@@ -57,4 +61,8 @@ dockerFiles:
   - folderPath: java/jdk21-jemalloc
     imageName: jdk21-jemalloc-ubuntu-22.04
     enabled: false
+    pushTag: ''
+  - folderPath: python/squid
+    imageName: dify-squid
+    enabled: true
     pushTag: ''
