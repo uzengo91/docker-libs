@@ -17,8 +17,12 @@ images:
     pushName: alpine/socat:v1.0.0
   - image: langgenius/dify-sandbox:0.2.10
     platform: linux/amd64
-    enabled: true
+    enabled: false
     pushName: dify-sandbox:0.2.10
+  - image: python:3.12-slim-bookworm
+    platform: linux/amd64
+    enabled: true
+    pushName: python:3.12-slim-bookworm
 
 runtimes:
   - folderPath: base/libs-sources
@@ -64,5 +68,5 @@ dockerFiles:
     pushTag: ''
   - folderPath: python/squid
     imageName: dify-squid
-    enabled: true
+    enabled: false
     pushTag: ''
