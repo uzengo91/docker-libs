@@ -21,8 +21,12 @@ images:
     pushName: dify-sandbox:0.2.10
   - image: python:3.12-slim-bookworm
     platform: linux/amd64
-    enabled: true
+    enabled: false
     pushName: python:3.12-slim-bookworm
+  - image: searxng/searxng
+    platform: linux/amd64
+    enabled: true
+    pushName: searxng/searxng
 
 runtimes:
   - folderPath: base/libs-sources
