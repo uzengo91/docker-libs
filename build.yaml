@@ -25,8 +25,12 @@ images:
     pushName: python:3.12-slim-bookworm
   - image: searxng/searxng
     platform: linux/amd64
-    enabled: true
+    enabled: false
     pushName: searxng/searxng
+  - image: nacos/nacos-server:v3.0.0
+    platform: linux/amd64
+    enabled: true
+    pushName: nacos/nacos-server:v3.0.0
 
 runtimes:
   - folderPath: base/libs-sources
