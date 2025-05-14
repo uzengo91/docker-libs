@@ -29,8 +29,12 @@ images:
     pushName: searxng/searxng
   - image: nacos/nacos-server:v3.0.0
     platform: linux/amd64
-    enabled: true
+    enabled: false
     pushName: nacos/nacos-server:v3.0.0
+  - image: ghcr.io/open-webui/mcpo
+    platform: linux/amd64
+    enabled: true
+    pushName: mcpo:202505141
 
 runtimes:
   - folderPath: base/libs-sources
@@ -77,4 +81,8 @@ dockerFiles:
   - folderPath: python/squid
     imageName: dify-squid
     enabled: false
+    pushTag: ''
+  - folderPath: python/mcpo
+    imageName: mcpo
+    enabled: true
     pushTag: ''
