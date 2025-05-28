@@ -33,8 +33,12 @@ images:
     pushName: nacos/nacos-server:v3.0.0
   - image: ghcr.io/open-webui/mcpo
     platform: linux/amd64
-    enabled: true
+    enabled: false
     pushName: mcpo:202505141
+  - image: ghcr.io/uzengo91/mcprouter
+    platform: linux/amd64
+    enabled: true
+    pushName: mcprouter:202505281
 
 runtimes:
   - folderPath: base/libs-sources
@@ -84,5 +88,5 @@ dockerFiles:
     pushTag: ''
   - folderPath: python/mcpo
     imageName: mcpo
-    enabled: true
+    enabled: false
     pushTag: ''
