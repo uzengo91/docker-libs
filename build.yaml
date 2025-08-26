@@ -37,8 +37,12 @@ images:
     pushName: mcpo:202505141
   - image: ghcr.io/uzengo91/mcprouter
     platform: linux/amd64
-    enabled: true
+    enabled: false
     pushName: mcprouter:202505281
+  - image: minlag/mermaid-cli:11.9.0
+    platform: linux/amd64
+    enabled: true
+    pushName: minlag/mermaid-cli:11.9.0
 
 runtimes:
   - folderPath: base/libs-sources
