@@ -55,6 +55,8 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
     - name: Docker Setup Buildx
       uses: docker/setup-buildx-action@v3
 
@@ -90,12 +92,16 @@ jobs:
             continue
           fi
 
+          platformName="runtimes__${LENGTH}__platform"
+          platform=$(eval "echo \${$platformName}")
+          echo "platform: $platform"
+
           echo "folderPath: $filePath, imageName: $image"
 
-          docker build --build-arg OSS_HOST -t $image $filePath
+          docker buildx build --platform $platform --build-arg OSS_HOST -t $image --push $filePath
           LENGTH=$((LENGTH+1))
         done
-        
+
         echo "runtime-base-dockerfile-libs end"
         echo "==================================================="
 
@@ -128,7 +134,7 @@ jobs:
           tagName="dockerFiles__${LENGTH}__pushTag"
           tag=$(eval "echo \${$tagName}")
           pushTag=""
-          
+
           # 不存在tag 或者tag为空
           if [ -z "$tag" ]; then
             pushTag=$(date "+%Y%m%d%H%M%S")
@@ -139,28 +145,18 @@ jobs:
             pushTag=$image:$tag
           fi
           echo "pushName: $pushTag"
-          # 进到目录 docker build -t $line .
-          docker build -t $image $filePath
+
+          platformName="dockerFiles__${LENGTH}__platform"
+          platform=$(eval "echo \${$platformName}")
+          echo "platform: $platform"
 
           new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/$ALIYUN_REGISTRY_BASE_PATH/$pushTag"
-          echo "docker tag $image $new_image"
-          docker tag $image $new_image
-          echo "docker push $new_image"
-          docker push $new_image
-          echo "开始清理磁盘空间"
-          echo "=============================================================================="
-          df -hT
-          echo "=============================================================================="
-          docker rmi $image
-          docker rmi $new_image
-          echo "磁盘空间清理完毕"
-          echo "=============================================================================="
-          df -hT
-          echo "=============================================================================="
-        
+
+          docker buildx build --platform $platform -t $new_image --push $filePath
+
           LENGTH=$((LENGTH+1))
         done
-        
+
         echo "image-build-push end"
         echo "==================================================="
 
@@ -191,106 +187,70 @@ jobs:
           pushName="images__${LENGTH}__pushName"
           pushTag=$(eval "echo \${$pushName}")
           echo "pushName: $pushTag"
-          #            echo "docker pull $line"
-          docker pull $image
 
           new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/$ALIYUN_REGISTRY_BASE_PATH/$pushTag"
-          echo "docker tag $image $new_image"
-          docker tag $image $new_image
-          echo "docker push $new_image"
-          docker push $new_image
-          echo "开始清理磁盘空间"
+
+          # If platform contains a comma, it's multi-platform
+          if [[ $platform == *,* ]]; then
+            echo "Multi-platform image, will use manifest to combine"
+            # Split platform string
+            IFS=',' read -ra platforms <<< "$platform"
+            images_to_push_for_manifest=""
+            for p in "${platforms[@]}"; do
+              arch_tag_suffix=""
+              if [[ $p == "linux/amd64" ]]; then
+                arch_tag_suffix="amd64"
+              elif [[ $p == "linux/arm64" ]]; then
+                arch_tag_suffix="arm64"
+              else
+                # Create a simple suffix from platform string
+                arch_tag_suffix=$(echo "$p" | sed 's|/|-|g')
+              fi
+
+              echo "Pulling image $image for platform $p"
+              docker pull --platform $p $image
+
+              arch_tagged_image="$new_image-$arch_tag_suffix"
+
+              echo "Tagging $image as $arch_tagged_image"
+              docker tag $image $arch_tagged_image
+
+              echo "Pushing platform-specific image: $arch_tagged_image"
+              docker push $arch_tagged_image
+
+              images_to_push_for_manifest="$images_to_push_for_manifest $arch_tagged_image"
+
+              # Clean up local images to save space
+              docker rmi $image
+              docker rmi $arch_tagged_image
+            done
+
+            echo "Creating manifest $new_image with images: $images_to_push_for_manifest"
+            docker manifest create $new_image $images_to_push_for_manifest
+            echo "Pushing manifest $new_image"
+            docker manifest push $new_image
+
+          else
+            # Single platform logic
+            echo "Pulling single-platform image $image for platform $platform"
+            docker pull --platform $platform $image
+            echo "Tagging $image as $new_image"
+            docker tag $image $new_image
+            echo "Pushing $new_image"
+            docker push $new_image
+
+            # Clean up local images
+            docker rmi $image
+            docker rmi $new_image
+          fi
+
+          echo "Disk space status"
           echo "=============================================================================="
           df -hT
           echo "=============================================================================="
-          docker rmi $image
-          docker rmi $new_image
-          echo "磁盘空间清理完毕"
-          echo "=============================================================================="
-          df -hT
-          echo "=============================================================================="
-        
+
           LENGTH=$((LENGTH+1))
         done
-        
+
         echo "image-build-push end"
         echo "==================================================="
-
-#    - name: Build and push image Aliyun
-#      run: |
-#        docker login -u $ALIYUN_REGISTRY_USER -p $ALIYUN_REGISTRY_PASSWORD $ALIYUN_REGISTRY
-#        # 数据预处理,判断镜像是否重名
-#        declare -A duplicate_images
-#        declare -A temp_map
-#
-#
-#        while IFS= read -r line || [ -n "$line" ]; do
-#            # 忽略空行与注释
-#            [[ -z "$line" ]] && continue
-#            if echo "$line" | grep -q '^\s*#'; then
-#                continue
-#            fi
-#
-#            echo "docker pull $line"
-#            docker pull $line
-#
-#            image=$(echo "$line" | awk '{print $NF}')
-#            echo "image: $image"
-#
-#            new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/$ALIYUN_REGISTRY_BASE_PATH/$image"
-#            echo "docker tag $image $new_image"
-#            docker tag $image $new_image
-#            echo "docker push $new_image"
-#            docker push $new_image
-#            echo "开始清理磁盘空间"
-#            echo "=============================================================================="
-#            df -hT
-#            echo "=============================================================================="
-#            docker rmi $image
-#            docker rmi $new_image
-#            echo "磁盘空间清理完毕"
-#            echo "=============================================================================="
-#            df -hT
-#            echo "=============================================================================="
-#
-#        done < images.txt
-#
-#    - name: Build docker file push image Aliyun
-#      run: |
-#        docker login -u $ALIYUN_REGISTRY_USER -p $ALIYUN_REGISTRY_PASSWORD $ALIYUN_REGISTRY
-#        tag=$(date "+%Y%m%d%H%M%S")
-#        #4位随机数
-#        rand=$(cat /proc/sys/kernel/random/uuid | cut -b 1-4)
-#        tag=$tag-$rand
-#
-#        while IFS= read -r line || [ -n "$line" ]; do
-#            # 忽略空行与注释
-#            [[ -z "$line" ]] && continue
-#            if echo "$line" | grep -q '^\s*#'; then
-#                continue
-#            fi
-#
-#            echo "docker pull $line"
-#            # 进到目录 docker build -t $line .
-#            image=$(echo "$line" | awk '{print $NF}'):$tag
-#            cd dockerfile/$line && docker build -t $image .
-#
-#            echo "image: $image"
-#
-#            new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/$ALIYUN_REGISTRY_BASE_PATH/$image"
-#            echo "docker tag $image $new_image"
-#            docker tag $image $new_image
-#            echo "docker push $new_image"
-#            docker push $new_image
-#            echo "开始清理磁盘空间"
-#            echo "=============================================================================="
-#            df -hT
-#            echo "=============================================================================="
-#            docker rmi $image
-#            docker rmi $new_image
-#            echo "磁盘空间清理完毕"
-#            echo "=============================================================================="
-#            df -hT
-#            echo "=============================================================================="
-#
-#        done < dockerfile.txt

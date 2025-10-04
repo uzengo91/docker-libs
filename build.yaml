@@ -40,7 +40,7 @@ images:
     enabled: false
     pushName: mcprouter:202505281
   - image: minlag/mermaid-cli:11.9.0
-    platform: linux/amd64
+    platform: linux/amd64,linux/arm64
     enabled: true
     pushName: minlag/mermaid-cli:11.9.0
 
@@ -48,49 +48,62 @@ runtimes:
   - folderPath: base/libs-sources
     imageName: zengo1209/dockerlibs-sources
     enabled: true
+    platform: linux/amd64,linux/arm64
   - folderPath: base/libs-jemalloc
     imageName: zengo1209/dockerlibs-jemalloc
     enabled: false
+    platform: linux/amd64,linux/arm64
   - folderPath: base/libs-ffmpeg5
     imageName: zengo1209/dockerlibs-ffmpeg5
     enabled: false
+    platform: linux/amd64,linux/arm64
   - folderPath: base/libs-ffmpeg6
     imageName: zengo1209/dockerlibs-ffmpeg6
     enabled: false
+    platform: linux/amd64,linux/arm64
   - folderPath: base/libs-java-agent
     imageName: zengo1209/dockerlibs-java-agent
     enabled: false
+    platform: linux/amd64,linux/arm64
 
 dockerFiles:
   - folderPath: java/jdk8
     imageName: jdk8-debian
     enabled: false
     pushTag: "" # 空字符串表示 使用 $imageName:$date-$rand[4] 作为tag
+    platform: linux/amd64,linux/arm64
   - folderPath: java/jdk8-ffmpeg
     imageName: jdk8-debian-ffmpeg
     enabled: false
     pushTag: "" # 空字符串表示 使用 $imageName:$date-$rand[4] 作为tag
+    platform: linux/amd64,linux/arm64
   - folderPath: java/jdk8-ffmpeg-copy
     imageName: jdk8-debian-ffmpeg-copy
     enabled: false
     pushTag: ""
+    platform: linux/amd64,linux/arm64
   - folderPath: java/jdk8-arthas-server
     imageName: jdk8-debian-arthas-server
     enabled: false
     pushTag: "v0.0.4"
+    platform: linux/amd64,linux/arm64
   - folderPath: java/jdk21
     imageName: jdk21-ubuntu-22.04
     enabled: false
     pushTag: ""
+    platform: linux/amd64,linux/arm64
   - folderPath: java/jdk21-jemalloc
     imageName: jdk21-jemalloc-ubuntu-22.04
     enabled: false
     pushTag: ''
+    platform: linux/amd64,linux/arm64
   - folderPath: python/squid
     imageName: dify-squid
     enabled: false
     pushTag: ''
+    platform: linux/amd64,linux/arm64
   - folderPath: python/mcpo
     imageName: mcpo
     enabled: false
     pushTag: ''
+    platform: linux/amd64,linux/arm64
