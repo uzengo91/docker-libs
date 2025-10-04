@@ -98,7 +98,7 @@ jobs:
 
           echo "folderPath: $filePath, imageName: $image"
 
-          docker buildx build --platform $platform --build-arg OSS_HOST -t $image --push $filePath
+          docker buildx build --platform $platform --build-arg OSS_HOST -t $image --load $filePath
           LENGTH=$((LENGTH+1))
         done
 
