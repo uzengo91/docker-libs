@@ -1,0 +1,10 @@
+services:
+  mmdc:
+    image: py310-mmdc:2022
+    container_name: mmdc
+    restart: always
+    hostname: "mmdc-local"
+    volumes:
+      - ./data:/data-mmdc
+    entrypoint: >
+      sh -c "sleep infinity"
