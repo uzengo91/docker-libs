@@ -41,8 +41,12 @@ images:
     pushName: mcprouter:202505281
   - image: minlag/mermaid-cli:11.9.0
     platform: linux/amd64
-    enabled: true
+    enabled: false
     pushName: minlag/mermaid-cli:11.9.0
+  - image: nvidia/cuda:12.2.0-runtime-ubuntu20.04
+    platform: linux/amd64
+    enabled: true
+    pushName: nvidia/cuda:12.2.0-runtime-ubuntu20.04
 
 runtimes:
   - folderPath: base/libs-sources
