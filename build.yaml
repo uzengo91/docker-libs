@@ -45,8 +45,12 @@ images:
     pushName: minlag/mermaid-cli:11.9.0
   - image: nvidia/cuda:12.2.0-runtime-ubuntu20.04
     platform: linux/amd64
-    enabled: true
+    enabled: false
     pushName: nvidia/cuda:12.2.0-runtime-ubuntu20.04
+  - image: nvidia/cuda:12.2.0-devel-ubuntu20.04
+    platform: linux/amd64
+    enabled: true
+    pushName: nvidia/cuda:12.2.0-devel-ubuntu20.04
 
 runtimes:
   - folderPath: base/libs-sources
