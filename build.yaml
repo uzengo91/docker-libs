@@ -61,7 +61,7 @@ images:
     pushName: python:3.10.15-slim-bookworm
   - image: eclipse-temurin:17.0.18_8-jdk-noble
     platform: linux/amd64
-    enabled: false
+    enabled: true
     pushName: eclipse-temurin:17.0.18_8-jdk-noble
 
 runtimes:
