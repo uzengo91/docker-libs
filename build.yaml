@@ -61,8 +61,12 @@ images:
     pushName: python:3.10.15-slim-bookworm
   - image: eclipse-temurin:17.0.18_8-jdk-noble
     platform: linux/amd64
-    enabled: true
+    enabled: false
     pushName: eclipse-temurin:17.0.18_8-jdk-noble
+  - image: python:3.11-slim
+    platform: linux/amd64
+    enabled: true
+    pushName: python:3.11-slim
 
 runtimes:
   - folderPath: base/libs-sources
