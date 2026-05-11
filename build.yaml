@@ -65,8 +65,12 @@ images:
     pushName: eclipse-temurin:17.0.18_8-jdk-noble
   - image: python:3.11-slim
     platform: linux/amd64
-    enabled: true
+    enabled: false
     pushName: python:3.11-slim
+  - image: polardbx/polardb-x:v2.4.2_5.4.19
+    platform: linux/amd64
+    enabled: true
+    pushName: polardbx/polardb-x:v2.4.2_5.4.19
 
 runtimes:
   - folderPath: base/libs-sources
