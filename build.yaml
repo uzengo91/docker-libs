@@ -69,8 +69,12 @@ images:
     pushName: python:3.11-slim
   - image: polardbx/polardb-x:v2.4.2_5.4.19
     platform: linux/amd64
-    enabled: true
+    enabled: false
     pushName: polardbx/polardb-x:v2.4.2_5.4.19
+  - image: oceanbase/oceanbase-ce:4.3.5-lts
+    platform: linux/amd64
+    enabled: true
+    pushName: oceanbase/oceanbase-ce:4.3.5-lts
 
 runtimes:
   - folderPath: base/libs-sources
